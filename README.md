@@ -1,6 +1,5 @@
-# Bird Watching API - Node.js CRUD Implementation
+# Birdr Bird Watching API - Node.js CRUD Implementation
 
-![Bird Watching API](https://your-repo-url.com/bird_watching_api.png)
 
 ## Overview
 
