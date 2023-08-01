@@ -4,17 +4,7 @@ const mysql = require('mysql');
 require('dotenv').config();
 const moment = require('moment');
 const axios = require('axios');
-const { geoCron } = require('./geoCron');
 
-
-/// cron
-const cron = require('node-cron');
-
-cron.schedule('0 0 * * *', function() {
-  console.log('running geolocate');
-  geoCron();
-
-});
 
 // ///api//////
 const db = mysql.createPool({
