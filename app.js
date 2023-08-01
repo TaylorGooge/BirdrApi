@@ -42,3 +42,7 @@ app.on('uncaughtException', function (err) {
     console.log(err);
 }); 
 
+app.on('uncaughtException', function (err) {
+    console.log(err);
+});
+
