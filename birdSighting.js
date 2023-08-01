@@ -48,6 +48,7 @@ router.get('/', function (req, res) {
     res.status(200).json(result);
   });
 });
+
 router.get('/user/:user', function (req, res) {
   const { user } = req.params;
   const query = `SELECT birdCodes.englishName, birdCodes.scientificName, birdCodes.birdImg, birdCodes.birdCall, birdSighting.date, birdSighting.userID, birdSighting.birdID, birdSighting.coordA, 
@@ -55,6 +56,15 @@ router.get('/user/:user', function (req, res) {
                 INNER JOIN birdSighting on 
                 birdCodes.birdID = birdSighting.birdID 
                 WHERE birdSighting.userID = ${mysql.escape(user)} `;
+  db.query(query, function (err, result) {
+    if (err) throw err;
+    res.status(200).json(result);
+  });
+});
+
+ router.get('/date', function(req, res) {
+  const { start, end } = req.body;
+  const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID WHERE date <= ${mysql.escape(end)} and date >= ${mysql.escape(start)}`;
   db.query(query, function (err, result) {
     if (err) throw err;
     res.status(200).json(result);
