@@ -83,7 +83,7 @@ router.post('/', function (req, res) {
   });
 });
 //////////// update ///////////
-rrouter.put('/update/:id', function (req, res) {
+router.put('/update/:id', function (req, res) {
   const { id } = req.params;
   const { userID, birdID, coordA, coordB, date , locality, state, country} = req.body;
   console.log(req.body)
