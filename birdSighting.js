@@ -62,14 +62,15 @@ router.get('/user/:user', function (req, res) {
   });
 });
 
- router.get('/date', function(req, res) {
+  router.get('/date', function(req, res) {
   const { start, end } = req.query;
-  const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID WHERE date <= ${mysql.escape(end)} and date >= ${mysql.escape(start)}`;
+  const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID WHERE date BETWEEN ${mysql.escape(start)} AND ${mysql.escape(end)}`;
   db.query(query, function (err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
 });
+
 
 router.get('/', function (req, res) {
   const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID`;
