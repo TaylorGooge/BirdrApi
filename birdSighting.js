@@ -63,7 +63,7 @@ router.get('/user/:user', function (req, res) {
 });
 
  router.get('/date', function(req, res) {
-  const { start, end } = req.body;
+  const { start, end } = req.query;
   const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID WHERE date <= ${mysql.escape(end)} and date >= ${mysql.escape(start)}`;
   db.query(query, function (err, result) {
     if (err) throw err;
