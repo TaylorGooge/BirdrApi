@@ -3,7 +3,18 @@ const app = express();
 const mysql = require('mysql');
 const path = require('path');
 const bodyParser = require('body-parser');
-const cors = require('cors'); 
+const cors = require('cors');
+const { geoCron } = require('./geoCron');
+
+
+/// cron
+const cron = require('node-cron');
+
+cron.schedule('0 0 * * *', function() {
+  console.log('running geolocate');
+  geoCron();
+
+});
 
 // ///use //////
 app.use(bodyParser.json());
