@@ -82,22 +82,35 @@ router.post('/', function (req, res) {
   });
 });
 //////////// update ///////////
-router.put('/update/:id', function (req, res) {
+rrouter.put('/update/:id', function (req, res) {
   const { id } = req.params;
-  const { userID, birdID, coordA, coordB, date } = req.body;
-  const query = `
+  const { userID, birdID, coordA, coordB, date , locality, state, country} = req.body;
+  console.log(req.body)
+ 
+ let query = `
     UPDATE birdSighting 
     SET userID = ${mysql.escape(userID)}, 
-      birdID = ${mysql.escape(birdID)}, 
-      coordA = ${mysql.escape(coordA)},
-      coordB = ${mysql.escape(coordB)},
-      date = ${mysql.escape(date)}
-    WHERE id = ${mysql.escape(id)}`;
+    birdID = ${mysql.escape(birdID)}, 
+    coordA = ${mysql.escape(coordA)},
+    coordB = ${mysql.escape(coordB)},
+    date = ${mysql.escape(date)}`
+  if (locality) {
+    query += `, locality = ${mysql.escape(locality)}`;
+  }
+  if (state) {
+    query += `, state = ${mysql.escape(state)}`;
+  }
+  if (locality) {
+    query += `, country = ${mysql.escape(country)}`;
+  }
+  query += ` WHERE id = ${mysql.escape(id)}`;
+    
   db.query(query, function (err, result) {
     if (err) throw err;
     res.sendStatus(200);
   });
 });
+
 router.delete('/:id', function(req, res) {
   const { id } = req.params;
   const query = `DELETE FROM birdSighting WHERE id = ${mysql.escape(id)}`;
