@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(cors({
-  origin: 'https://birdrfrontend.taylorgooge.repl.co'
+  origin: ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app']
 }));
 //Middleware to set Access-Control-Allow-Origin header
 app.use((req, res, next) => {
