@@ -18,7 +18,7 @@ const db = mysql.createPool({
 //getters
 router.get('/id/:id', function (req, res) {
   const { id } = req.params;
-  const query = `SELECT birdCodes.englishName, birdCodes.birdImg, birdCodes.birdCall, birdSighting.date, birdSighting.userID, birdSighting.birdID, birdSighting.coordA, 
+  const query = `SELECT birdCodes.scientificName, birdCodes.englishName, birdCodes.birdImg, birdCodes.birdCall, birdSighting.date, birdSighting.userID, birdSighting.birdID, birdSighting.coordA, 
                 birdSighting.coordB, birdSighting.id, birdSighting.userID FROM birdCodes 
                 INNER JOIN birdSighting on 
                 birdCodes.birdID = birdSighting.birdID 
