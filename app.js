@@ -29,10 +29,20 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 //Middleware to set Access-Control-Allow-Origin header
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', 'https://birdrfrontend.taylorgooge.repl.co');
+//   res.append('Access-Control-Allow-Headers', 'Content-Type');
+//   res.set('Access-Control-Expose-Headers', '*')
+//   next();
+// });
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://birdrfrontend.taylorgooge.repl.co');
+  const allowedOrigins = ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.append('Access-Control-Allow-Headers', 'Content-Type');
-  res.set('Access-Control-Expose-Headers', '*')
+  res.set('Access-Control-Expose-Headers', '*');
   next();
 });
 
