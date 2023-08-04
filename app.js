@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 //   origin: ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app']
 // }));
 app.use(cors({
-  origin: ['https://birdrfrontend.taylorgooge.repl.co','https://birdr-app.replit.app'],
+  origin: ['https://birdrfrontend.taylorgooge.repl.co','https://birdr-app.replit.app', 'http://localhost'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
@@ -36,7 +36,7 @@ app.use(cors({
 //   next();
 // });
 app.use((req, res, next) => {
-  const allowedOrigins = ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app'];
+  const allowedOrigins = ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app', 'http://localhost'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
