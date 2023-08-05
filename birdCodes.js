@@ -25,6 +25,15 @@ router.get('/:id', function (req, res) {
   });
 });
 
+router.get('/englishName/:englishName', function (req, res) {
+  const { englishName } = req.params;
+  const query = `SELECT * FROM birdCodes WHERE LOWER(englishName) = LOWER(${mysql.escape(englishName)})`;
+  db.query(query, function (err, result) {
+    if (err) throw err;
+    res.status(200).json(result);
+  });
+});
+
 router.get('/', function (req, res) {
   const query = `SELECT * FROM birdCodes`;
   db.query(query, function (err, result) {
