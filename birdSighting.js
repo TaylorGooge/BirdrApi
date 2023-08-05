@@ -96,26 +96,45 @@ router.post('/', function (req, res) {
 //////////// update ///////////
 router.put('/update/:id', function (req, res) {
   const { id } = req.params;
-  const { userID, birdID, coordA, coordB, date , locality, state, country} = req.body;
-  console.log(req.body)
+  const { userID, birdID, coordA, coordB, date, locality, state, country, year, season} = req.body;
  
- let query = `
-    UPDATE birdSighting 
-    SET userID = ${mysql.escape(userID)}, 
-    birdID = ${mysql.escape(birdID)}, 
-    coordA = ${mysql.escape(coordA)},
-    coordB = ${mysql.escape(coordB)},
-    date = ${mysql.escape(date)}`
+  let query = `UPDATE birdSighting SET `;
+  const queryParams = [];
+  
+  if (userID) {
+    queryParams.push(`userID = ${mysql.escape(userID)}`);
+  }
+  if (birdID) {
+    queryParams.push(`birdID = ${mysql.escape(birdID)}`);
+  }
+  if (coordA) {
+    queryParams.push(`coordA = ${mysql.escape(coordA)}`);
+  }
+  if (coordB) {
+    queryParams.push(`coordB = ${mysql.escape(coordB)}`);
+  }
+  if (date) {
+    queryParams.push(`date = ${mysql.escape(date)}`);
+  }
   if (locality) {
-    query += `, locality = ${mysql.escape(locality)}`;
+    queryParams.push(`locality = ${mysql.escape(locality)}`);
   }
   if (state) {
-    query += `, state = ${mysql.escape(state)}`;
+    queryParams.push(`state = ${mysql.escape(state)}`);
   }
-  if (locality) {
-    query += `, country = ${mysql.escape(country)}`;
+  if (country) {
+    queryParams.push(`country = ${mysql.escape(country)}`);
   }
+   if (year) {
+    queryParams.push(`year = ${mysql.escape(year)}`);
+  }
+   if (season) {
+    queryParams.push(`season = ${mysql.escape(season)}`);
+  }
+  
+  query += queryParams.join(', ');
   query += ` WHERE id = ${mysql.escape(id)}`;
+  console.log(query);
     
   db.query(query, function (err, result) {
     if (err) throw err;
