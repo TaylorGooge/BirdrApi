@@ -18,9 +18,9 @@ cron.schedule('0 0 * * *', function() {
 });
 
 cron.schedule('0 0 * * *', function() {
-  console.log('running season');
+  console.log('running geolocate and season');
+  geoCron();
   seasonCron();
-
 });
 
 // ///use //////
