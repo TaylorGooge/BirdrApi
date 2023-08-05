@@ -49,6 +49,17 @@ router.get('/', function (req, res) {
   });
 });
 
+router.get('/year/:year/season/:season', function(req, res) {
+  console.log('here')
+  const { year, season } = req.params;
+  const query = `SELECT * FROM birdSighting WHERE year = ${mysql.escape(year)} AND season = ${mysql.escape(season)}`;
+  db.query(query, function (err, result) {
+    if (err) throw err;
+    res.status(200).json(result);
+  });
+});
+
+
 router.get('/user/:user', function (req, res) {
   const { user } = req.params;
   const query = `SELECT birdCodes.englishName, birdCodes.scientificName, birdCodes.birdImg, birdCodes.birdCall, birdSighting.date, birdSighting.userID, birdSighting.birdID, birdSighting.coordA, 
