@@ -5,6 +5,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { geoCron } = require('./geoCron');
+const { seasonCron } = require('./seasonCron');
 
 
 /// cron
@@ -13,6 +14,12 @@ const cron = require('node-cron');
 cron.schedule('0 0 * * *', function() {
   console.log('running geolocate');
   geoCron();
+
+});
+
+cron.schedule('0 0 * * *', function() {
+  console.log('running season');
+  seasonCron();
 
 });
 
