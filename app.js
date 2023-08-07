@@ -27,23 +27,15 @@ cron.schedule('0 0 * * *', function() {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-// app.use(cors({
-//   origin: ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app']
-// }));
+
 app.use(cors({
-  origin: ['https://birdrfrontend.taylorgooge.repl.co','https://birdr-app.replit.app', 'http://localhost', 'https://birdrfrontend20.taylorgooge.repl.co/'],
+  origin: ['https://birdrfrontend.taylorgooge.repl.co','https://birdr-app.replit.app','https://birdrfrontend20.taylorgooge.repl.co'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
-//Middleware to set Access-Control-Allow-Origin header
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', 'https://birdrfrontend.taylorgooge.repl.co');
-//   res.append('Access-Control-Allow-Headers', 'Content-Type');
-//   res.set('Access-Control-Expose-Headers', '*')
-//   next();
-// });
+
 app.use((req, res, next) => {
-  const allowedOrigins = ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app', 'http://localhost', 'https://birdrfrontend20.taylorgooge.repl.co/'];
+  const allowedOrigins = ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app','https://birdrfrontend20.taylorgooge.repl.co'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
