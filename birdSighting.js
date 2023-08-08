@@ -96,8 +96,7 @@ router.get('/', function (req, res) {
 //////////// create new ///////////
 router.post('/', function (req, res) {
   const { userID, birdID, coordA, coordB, date, locality, country, state } = req.body;
-   const formattedDateTime = moment(date).format('YYYY-MM-DD HH:mm:ss');
-  console.log(req.body);
+   const formattedDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
   const query = `INSERT INTO birdSighting (userID, birdID, coordA, coordB, date, locality, country, state) VALUES (${mysql.escape(userID)}, ${mysql.escape(birdID)}, ${mysql.escape(coordA)}, ${mysql.escape(coordB)}, ${mysql.escape(formattedDateTime)}, ${mysql.escape(locality)},${mysql.escape(country)},${mysql.escape(state)})`;
   db.query(query, function (err, result) {
     if (err) throw err;
