@@ -16,36 +16,35 @@ const db = mysql.createPool({
 });
 
 //getters
-router.get('/id/:id', function (req, res) {
+router.get('/id/:id', function(req, res) {
   const { id } = req.params;
   const query = `SELECT birdCodes.scientificName, birdCodes.englishName, birdCodes.birdImg, birdCodes.birdCall, birdSighting.date, birdSighting.userID, birdSighting.birdID, birdSighting.coordA, 
                 birdSighting.coordB, birdSighting.id, birdSighting.userID FROM birdCodes 
                 INNER JOIN birdSighting on 
                 birdCodes.birdID = birdSighting.birdID 
                 WHERE birdSighting.birdID = ${mysql.escape(id)}`;
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
 });
-router.get('/group/:group', function (req, res) {
+router.get('/group/:group', function(req, res) {
   const { group } = req.params;
   const query = `SELECT birdCodes.englishName, birdCodes.birdImg, birdCodes.birdCall, birdSighting.date, birdSighting.userID, birdSighting.birdID, birdSighting.coordA, 
                 birdSighting.coordB, birdSighting.id, birdSighting.userID FROM birdCodes 
                 INNER JOIN birdSighting on 
                 birdCodes.birdID = birdSighting.birdID 
                 WHERE birdCodes.birdGroup = ${mysql.escape(group)} `;
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
 });
 
-router.get('/', function (req, res) {
-    console.log('here')
+router.get('/', function(req, res) {
   const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID ORDER BY birdSighting.date desc`;
 
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
@@ -54,21 +53,21 @@ router.get('/', function (req, res) {
 router.get('/year/:year/season/:season', function(req, res) {
   const { year, season } = req.params;
   const query = `SELECT * FROM birdSighting WHERE year = ${mysql.escape(year)} AND season = ${mysql.escape(season)}`;
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
 });
 
 
-router.get('/user/:user', function (req, res) {
+router.get('/user/:user', function(req, res) {
   const { user } = req.params;
   const query = `SELECT birdCodes.englishName, birdCodes.scientificName, birdCodes.birdImg, birdCodes.birdCall, birdSighting.date, birdSighting.userID, birdSighting.birdID, birdSighting.coordA, 
                 birdSighting.coordB, birdSighting.id, birdSighting.userID FROM birdCodes 
                 INNER JOIN birdSighting on 
                 birdCodes.birdID = birdSighting.birdID 
-                WHERE birdSighting.userID = ${mysql.escape(user)} `;
-  db.query(query, function (err, result) {
+                WHERE birdSighting.userID = ${mysql.escape(user)} ORDER BY birdSighting.date desc`;
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
@@ -77,16 +76,16 @@ router.get('/user/:user', function (req, res) {
 router.get('/date', function(req, res) {
   const { start, end } = req.query;
   const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID WHERE date BETWEEN ${mysql.escape(end)} AND ${mysql.escape(start)}`;
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
 });
 
 
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
   const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID`;
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
@@ -95,23 +94,23 @@ router.get('/', function (req, res) {
 
 //setters
 //////////// create new ///////////
-router.post('/', function (req, res) {
+router.post('/', function(req, res) {
   const { userID, birdID, coordA, coordB, date, locality, country, state } = req.body;
-   const formattedDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+  const formattedDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
   const query = `INSERT INTO birdSighting (userID, birdID, coordA, coordB, date, locality, country, state) VALUES (${mysql.escape(userID)}, ${mysql.escape(birdID)}, ${mysql.escape(coordA)}, ${mysql.escape(coordB)}, ${mysql.escape(formattedDateTime)}, ${mysql.escape(locality)},${mysql.escape(country)},${mysql.escape(state)})`;
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.sendStatus(200);
   });
 });
 //////////// update ///////////
-router.put('/update/:id', function (req, res) {
+router.put('/update/:id', function(req, res) {
   const { id } = req.params;
-  const { userID, birdID, coordA, coordB, date, locality, state, country, year, season} = req.body;
- 
+  const { userID, birdID, coordA, coordB, date, locality, state, country, year, season } = req.body;
+
   let query = `UPDATE birdSighting SET `;
   const queryParams = [];
-  
+
   if (userID) {
     queryParams.push(`userID = ${mysql.escape(userID)}`);
   }
@@ -136,18 +135,17 @@ router.put('/update/:id', function (req, res) {
   if (country) {
     queryParams.push(`country = ${mysql.escape(country)}`);
   }
-   if (year) {
+  if (year) {
     queryParams.push(`year = ${mysql.escape(year)}`);
   }
-   if (season) {
+  if (season) {
     queryParams.push(`season = ${mysql.escape(season)}`);
   }
-  
+
   query += queryParams.join(', ');
   query += ` WHERE id = ${mysql.escape(id)}`;
-  console.log(query);
-    
-  db.query(query, function (err, result) {
+
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.sendStatus(200);
   });
@@ -156,7 +154,7 @@ router.put('/update/:id', function (req, res) {
 router.delete('/:id', function(req, res) {
   const { id } = req.params;
   const query = `DELETE FROM birdSighting WHERE id = ${mysql.escape(id)}`;
-  db.query(query, function (err, result) {
+  db.query(query, function(err, result) {
     if (err) throw err;
     res.sendStatus(200);
   });
