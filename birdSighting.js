@@ -42,7 +42,9 @@ router.get('/group/:group', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-  const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID`;
+    console.log('here')
+  const query = `Select * from birdSighting INNER JOIN birdCodes on birdCodes.birdID = birdSighting.birdID ORDER BY birdSighting.date desc`;
+
   db.query(query, function (err, result) {
     if (err) throw err;
     res.status(200).json(result);
@@ -50,7 +52,6 @@ router.get('/', function (req, res) {
 });
 
 router.get('/year/:year/season/:season', function(req, res) {
-  console.log('here')
   const { year, season } = req.params;
   const query = `SELECT * FROM birdSighting WHERE year = ${mysql.escape(year)} AND season = ${mysql.escape(season)}`;
   db.query(query, function (err, result) {
