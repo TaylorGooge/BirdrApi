@@ -52,14 +52,23 @@ router.get('/top10group', function(req, res, next) {
 });
 
 router.get('/birdrlocations', function(req, res, next) {
-  db.query('SELECT DISTINCT coordA, coordB, locality, state from birdSighting', function(error, results) {
+  db.query(`SELECT MAX(coordA) AS coordA, MAX(coordB) AS coordB, MAX(locality) AS locality
+            FROM (
+              SELECT DISTINCT coordA, coordB, locality
+              FROM birdSighting
+            ) AS subquery
+            GROUP BY locality
+            ORDER BY locality ASC`, function(error, results) {
     if (error) {
       res.status(401).json({ error: 'Couldn\'t complete request' });
+      console.log(error)
     } else {
-      const obj = [['Lat', 'Lng', 'City']];
+      const obj = [];
       for (let i = 0; i < results.length; i++) {
-        const temp = [parseFloat(results[i].coordB), parseFloat(results[i].coordA), results[i].locality];
-        obj.push(temp);
+        if (results[i].locality) {
+          const temp = [parseFloat(results[i].coordB), parseFloat(results[i].coordA), results[i].locality];
+          obj.push(temp);
+        }
       }
       res.send(obj);
     }
