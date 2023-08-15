@@ -50,6 +50,22 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/geodist', function(req, res) {
+  const { long, lat } = req.query;
+  const query = `SELECT * FROM birdSighting a 
+WHERE (
+          acos(sin(a.coordB * 0.0175) * sin(${lat} * 0.0175) 
+               + cos(a.coordB * 0.0175) * cos(${lat}* 0.0175) *    
+                 cos((${long} * 0.0175) - (a.coordA * 0.0175))
+              ) * 6371  <= 10
+      )`;
+  db.query(query, function(err, result) {
+    if (err) throw err;
+    res.status(200).json(result);
+  });
+});
+
+
 router.get('/year/:year/season/:season', function(req, res) {
   const { year, season } = req.params;
   const query = `SELECT * FROM birdSighting WHERE year = ${mysql.escape(year)} AND season = ${mysql.escape(season)}`;
