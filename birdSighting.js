@@ -51,9 +51,18 @@ router.get('/', function(req, res) {
 });
 
 router.post('/geodist', function(req, res) {
-  console.log(req.body)
   const { long, lat } = req.body;
-  console.log(long, lat)
+  const query = `SELECT * FROM birdSighting a 
+WHERE (
+          acos(sin(a.coordB * 0.0175) * sin(${lat} * 0.0175) 
+               + cos(a.coordB * 0.0175) * cos(${lat}* 0.0175) *    
+                 cos((${long} * 0.0175) - (a.coordA * 0.0175))
+              ) * 6371  <= 10
+      )`;
+  db.query(query, function(err, result) {
+    if (err) throw err;
+    res.status(200).json(result);
+  });
 });
 
 
