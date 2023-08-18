@@ -50,7 +50,7 @@ router.get('/', function(req, res) {
   });
 });
 
-router.get('/geodist', function(req, res) {
+router.post('/geodist', function(req, res) {
   console.log(req.body)
   const { long, lat } = req.body;
   console.log(long, lat)
