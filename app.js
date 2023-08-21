@@ -29,13 +29,13 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 app.use(cors({
-  origin: ['https://birdrfrontend.taylorgooge.repl.co','https://birdr-app.replit.app','https://birdrfrontend20.taylorgooge.repl.co'],
+  origin: ['https://birdrfrontend.taylorgooge.repl.co','https://birdr-app.replit.app','https://birdrfrontend20.taylorgooge.repl.co', 'https://birdr-front-end2-0.vercel.app'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
 app.use((req, res, next) => {
-  const allowedOrigins = ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app','https://birdrfrontend20.taylorgooge.repl.co'];
+  const allowedOrigins = ['https://birdrfrontend.taylorgooge.repl.co', 'https://birdr-app.replit.app','https://birdrfrontend20.taylorgooge.repl.co', 'https://birdr-front-end2-0.vercel.app'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
