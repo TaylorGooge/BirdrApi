@@ -22,9 +22,26 @@ router.get('/', function(req, res) {
     res.status(200).json(result);
   });
 });
+router.get('/totals/:id/:userId', function(req, res) {
+  const { id, userId } = req.params;
+  console.log(req.params);
+  const query = `SELECT
+    COUNT(bs.date) AS totalSighted,
+    (SELECT COUNT(*) FROM testDatabase.checkListData WHERE checklistID = ${mysql.escape(id)}) AS listLength
+FROM
+    testDatabase.checkListData AS c
+LEFT JOIN
+    birdSighting AS bs ON bs.birdID = c.species AND bs.userID = ${mysql.escape(userId)}
+WHERE
+    c.checkListID = ${mysql.escape(id)}`;
+  db.query(query, function(err, result) {
+    if (err) throw err;
+    res.status(200).json(result);
+  });
+});
 
-router.get('/:id', function(req, res) {
-  const { id } = req.params;
+router.get('/:id/:userId', function(req, res) {
+  const { id, userId } = req.params;
   const query = `SELECT
     c.birdRank,
     bc.englishName,
@@ -35,9 +52,11 @@ router.get('/:id', function(req, res) {
     bc.scientificName,
     c.annotation,
     c.statusNonbreeding,
+    c.statusHawaiian,
     c.statusExtinct,
     c.statusMisplaced,
-    c.statusAccidental
+    c.statusAccidental,
+    IF(bs.birdID IS NOT NULL, bs.date, NULL) as sighted
 FROM
     testDatabase.checkListData AS c
 JOIN
@@ -54,9 +73,15 @@ JOIN
     birdCodes AS bc_species ON c.species = bc_species.birdID
 JOIN
     checkList AS cl ON c.checkListID = cl.id
+LEFT JOIN
+    birdSighting AS bs ON bs.birdID = c.species AND bs.userID = ${mysql.escape(userId)}
 WHERE
-checkListID = ${mysql.escape(id)}`;
-  console.log(query)
+    checkListID = ${mysql.escape(id)}
+GROUP BY
+    c.birdRank, bc.englishName, toa.name, f.name, 
+    sf.name, g.name, bc.scientificName, c.annotation,
+    c.statusNonbreeding, c.statusHawaiian, c.statusExtinct, 
+    c.statusMisplaced, c.statusAccidental, sighted`;
   db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
