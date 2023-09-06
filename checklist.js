@@ -68,10 +68,39 @@ router.get('/:id/:userId', async function(req, res) {
 
     const columns = rows[0].columns.split(',');
 
-
     // Dynamic query to select specific columns from checkListData
     let query = `
-      SELECT ${columns}, IF(bs.birdID IS NOT NULL, bs.date, NULL) as sighted
+      SELECT ${columns.map(column => {
+      switch (column) {
+        case 'birdRank':
+          return 'c.birdRank';
+        case 'commonName':
+          return 'bc.englishName';
+        case 'orderName':
+          return 'toa.name AS orderName';
+        case 'family':
+          return 'f.name AS family';
+        case 'subFamily':
+          return 'sf.name AS subFamily';
+        case 'genus':
+          return 'g.name AS genus';
+        case 'species':
+          return 'bc.scientificName';
+        case 'annotation':
+          return 'c.annotation';
+        case 'statusNonbreeding':
+          return 'c.statusNonbreeding';
+        case 'statusExtinct':
+          return 'c.statusExtinct';
+        case 'statusMisplaced':
+          return 'c.statusMisplaced';
+        case 'statusAccidental':
+          return 'c.statusAccidental';
+        default:
+          return '';
+      }
+    }).filter(mapping => mapping !== '').join(', ')}, 
+      IF(bs.birdID IS NOT NULL, bs.date, NULL) as sighted
       FROM checkListData AS c
       JOIN birdCodes AS bc ON c.commonName = bc.birdID
       JOIN family AS f ON c.family = f.id
@@ -88,9 +117,9 @@ router.get('/:id/:userId', async function(req, res) {
       query += ' JOIN genus AS g ON c.genus = g.id ';
     }
 
-    query += `WHERE checkListID = ${mysql.escape(id)} GROUP BY ${columns}, sighted`;
+   query += `WHERE checkListID = ${mysql.escape(id)} GROUP BY ${columns.join(', ')}, sighted`;
 
-    [results] = await db.execute(query, [userId, id]);
+    const [results] = await db.execute(query, [userId, id]);
     const responseData = {
       rows: columns,
       results,
