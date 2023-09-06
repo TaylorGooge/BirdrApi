@@ -17,14 +17,15 @@ const db = mysql.createPool({
 
 router.get('/', function(req, res) {
   const query = 'SELECT * FROM checkList';
-  await db.execute(query, function(err, result) {
+  db.execute(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
 });
+
 router.get('/totals/:id/:userId', function(req, res) {
   const { id, userId } = req.params;
-  console.log(req.params);
+  
   const query = `SELECT
     COUNT(bs.date) AS totalSighted,
     (SELECT COUNT(*) FROM checkListData WHERE checklistID = ${mysql.escape(id)}) AS listLength
@@ -34,7 +35,7 @@ LEFT JOIN
     birdSighting AS bs ON bs.birdID = c.species AND bs.userID = ${mysql.escape(userId)}
 WHERE
     c.checkListID = ${mysql.escape(id)}`;
-  await db.execute(query, function(err, result) {
+  db.execute(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
