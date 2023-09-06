@@ -15,31 +15,39 @@ const db = mysql.createPool({
 });
 
 
-router.get('/', function(req, res) {
-  const query = 'SELECT * FROM checkList';
-  db.execute(query, function(err, result) {
-    if (err) throw err;
-    res.status(200).json(result);
-  });
+router.get('/', async function(req, res) {
+  try {
+    const query = 'SELECT * FROM checkList';
+    const [rows] = await db.execute(query); // Use await to execute the query
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-router.get('/totals/:id/:userId', function(req, res) {
+router.get('/totals/:id/:userId', async function(req, res) {
   const { id, userId } = req.params;
-  
-  const query = `SELECT
-    COUNT(bs.date) AS totalSighted,
-    (SELECT COUNT(*) FROM checkListData WHERE checklistID = ${mysql.escape(id)}) AS listLength
-FROM
-    checkListData AS c
-LEFT JOIN
-    birdSighting AS bs ON bs.birdID = c.species AND bs.userID = ${mysql.escape(userId)}
-WHERE
-    c.checkListID = ${mysql.escape(id)}`;
-  db.execute(query, function(err, result) {
-    if (err) throw err;
-    res.status(200).json(result);
-  });
+
+  try {
+    const query = `SELECT
+      COUNT(bs.date) AS totalSighted,
+      (SELECT COUNT(*) FROM checkListData WHERE checklistID = ?) AS listLength
+    FROM
+      checkListData AS c
+    LEFT JOIN
+      birdSighting AS bs ON bs.birdID = c.species AND bs.userID = ? 
+    WHERE
+      c.checkListID = ?`;
+
+    const [rows] = await db.execute(query, [id, userId, id]); // Use await and pass parameters
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
 
 router.get('/:id/:userId', async function(req, res) {
   const { id, userId } = req.params;
