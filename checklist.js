@@ -17,7 +17,7 @@ const db = mysql.createPool({
 
 router.get('/', function(req, res) {
   const query = 'SELECT * FROM checkList';
-  db.query(query, function(err, result) {
+  await db.execute(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
@@ -34,7 +34,7 @@ LEFT JOIN
     birdSighting AS bs ON bs.birdID = c.species AND bs.userID = ${mysql.escape(userId)}
 WHERE
     c.checkListID = ${mysql.escape(id)}`;
-  db.query(query, function(err, result) {
+  await db.execute(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
   });
