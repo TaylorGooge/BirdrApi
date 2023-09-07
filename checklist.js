@@ -97,7 +97,7 @@ router.get('/:id/:userId', async function(req, res) {
         case 'statusAccidental':
           return 'c.statusAccidental';
         default:
-          return '';
+          return column;
       }
     }).filter(mapping => mapping !== '').join(', ')}, 
       IF(bs.birdID IS NOT NULL, bs.date, NULL) as sighted
