@@ -65,10 +65,14 @@ WHERE (
               ) * 6371  <= 10
       )`;
   console.log(query);
-//   db.query(query, function(err, result) {
-//     if (err) throw err;
-//     res.status(200).json(result);
-//   });
+  db.query(query, function(err, result) {
+    if (err) {
+      console.log(err);
+      throw err;
+      
+    }
+    res.status(200).json(result);
+  });
 });
 
 
