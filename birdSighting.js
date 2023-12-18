@@ -23,6 +23,7 @@ router.get('/id/:id', function(req, res) {
                 INNER JOIN birdSighting on 
                 birdCodes.birdID = birdSighting.birdID 
                 WHERE birdSighting.birdID = ${mysql.escape(id)}`;
+  console.log(query);
   db.query(query, function(err, result) {
     if (err) throw err;
     res.status(200).json(result);
